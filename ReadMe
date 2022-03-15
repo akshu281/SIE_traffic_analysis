@@ -1,0 +1,43 @@
+A sample multi-stage pipeline using a subset of original data extracted using three open APIs and mockup data to predict traffic flow. Here traffic flow is equated to the number of vehicles at a specified location.
+
+Important variables:
+--------------------
+
+Weather info (Rain value, air temperature value) --> Sampled for 72hrs (3 days) using the readings value
+Vehicle count (vehicle count) --> Obtained from traffic images for few mins and interpolated for 72 hrs (3 days) using a simple CPU based YOLO detector
+
+Pre-processing:
+---------------
+
+In order to map these variables together, a simple clustering technique is used to group locations and filter them to make sure it is has all the values. For the sake of simplicity, one particular location is assumed and used for further analysis.
+
+Files:
+------
+
+**Step 1:**
+These operations are done here for 3 days individually (collated outputs in the respective date directories: 1003, 1103, 1203)
+weather/rain.ipynb - For processing rain data (rain.csv)
+weather/temp.ipynb - For processing air temp data (temperature.csv)
+weather/filtering_locs_analysis.ipynb - For filtering couple of locations to match it to traffic-images dataset (tuas_weather_data.csv, woodlands_weather_data.csv)
+
+**Step 2:**
+data_analysis/pre_process/process_time_weather.ipynb - To generate timestamps and to track dates using the data generated from Step 1 for each day (Used excel for remaining days following the dates; code can be extended as such)
+
+PS: Manually combined together to form final feature files: tuas_final.csv, wd_ave_final.csv, wd_rd_final.csv from Step 2
+
+**Step 3:**
+image_extract/images.ipynb - To extract and store the jsons from the traffic-images API
+image_extract/images_retrieve_meta.ipynb - To fetch the images from APIs and store locally by tracking a temp files list (for self). Input used here is JSONs obtained from images.ipynb (Only subset of images for few hours were downloaded for processing)
+
+**Step 4:**
+yolo/predict.py - Simple vehicle detector to estimate the vehicles count on the subset of images and recorded in a text file (count)
+imgs_metadata_count.csv - Manually just appended the count column for few rows obtained from YOLO for further processing using files count and filenames
+image_count/cluster.ipynb - To cluster the locations to zones and filtered one zone out for processing (ex: Tuas which is available in the other feature data as well). This file also is for interpolating the count of vehicles for remaining entries to match for 3 days. Final output is saved in count.csv. Other intermediate CSVs are also saved for reference
+
+**Step 5:**
+Putting them all together as one input file, combined tuas_final.csv and count.csv from Step 2 and Step 4 respectively for final analysis
+prediction/prediction.ipynb - Process the input file as train and test sets. Train a simple linear regressor to predict the instances in the assumed test set along with evaluation metrics. 
+
+**General challenges and improvements are marked for dicussion of the pipeline**
+
+Note: Intermediate CSVs obtained are also present as is in the directory structure for easy access
