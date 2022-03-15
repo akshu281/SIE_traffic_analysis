@@ -30,7 +30,7 @@ image_extract/images.ipynb - To extract and store the jsons from the traffic-ima
 image_extract/images_retrieve_meta.ipynb - To fetch the images from APIs and store locally by tracking a temp files list (for self). Input used here is JSONs obtained from images.ipynb (Only subset of images for few hours were downloaded for processing)
 
 **Step 4:**
-yolo/predict.py - Simple vehicle detector to estimate the vehicles count on the subset of images and recorded in a text file (count)
+yolo/predict.py - Simple vehicle detector to estimate the vehicles count on the subset of images and recorded in a text file count.txt (yolo weights not included)
 imgs_metadata_count.csv - Manually just appended the count column for few rows obtained from YOLO for further processing using files count and filenames
 image_count/cluster.ipynb - To cluster the locations to zones and filtered one zone out for processing (ex: Tuas which is available in the other feature data as well). This file also is for interpolating the count of vehicles for remaining entries to match for 3 days. Final output is saved in count.csv. Other intermediate CSVs are also saved for reference
 
@@ -41,3 +41,13 @@ prediction/prediction.ipynb - Process the input file as train and test sets. Tra
 **General challenges and improvements are marked for dicussion of the pipeline**
 
 Note: Intermediate CSVs obtained are also present as is in the directory structure for easy access
+
+
+**References**
+
+https://data.gov.sg/dataset/realtime-weather-readings
+https://data.gov.sg/dataset/traffic-images
+https://levelup.gitconnected.com/clustering-gps-co-ordinates-forming-regions-4f50caa7e4a1
+https://github.com/BakingBrains/YOLOv3/blob/main/README.md 
+https://pjreddie.com/darknet/yolo/
+https://machinelearningmastery.com/resample-interpolate-time-series-data-python/ 
